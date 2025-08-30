@@ -1,0 +1,37 @@
+Cloud (real NIC laptop, pakai dongle LAN/WiFi bridge, Pakai Kabel LAN)
+   |
+Switch
+   |
+Mikrotik ether1 (ke Cloud)
+   |
+Mikrotik ether2 (ke VPCs/aseli laptop)
+   |
+VPCS
+
+Masuk ke Consolenya Mikrotik
+Lalu konfigurasi:
+
+# Bersihkan konfigurasi awal
+/system reset-configuration no-defaults=yes skip-backup=yes
+
+# 1. Beri IP ke ether2 (LAN)
+ /ip address add address=192.168.bebas.1/24 interface=ether2
+
+# 2. DHCP Server untuk VPCS
+/ip pool add name=dhcp_pool2 ranges=192.168.bebas.10-192.168.bebas.100
+/ip dhcp-server add name=dhcp2 interface=ether2 address-pool=dhcp_pool2 disabled=no
+/ip dhcp-server network add address=192.168.bebas.0/24 gateway=192.168.bebas.1 dns-server=8.8.8.8
+
+# 3. DHCP Client di ether1 (dapat IP dari jaringan asli laptop, misalnya dari router rumah)
+ /ip dhcp-client add interface=ether1 disabled=no
+
+# 4. NAT masquerade supaya PC bisa akses internet
+/ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade
+
+Masuk ke Consolenya VPCs
+Lalu konfigurasi:
+# kalau mau otomatis DHCP
+ip dhcp
+# atau manual:
+ip 192.168.bebas.2/24 192.168.bebas.1
+
