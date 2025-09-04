@@ -1,0 +1,49 @@
+            Panduan ini menjelaskan langkah-langkah menjadikan laptop Linux Mint sebagai server
+             dan mengaksesnya secara remote dari komputer client (Windows) menggunakan PuTTY. 
+             Cocok untuk percobaan jaringan, tugas kuliah, atau latihan setup server pribadi.
+
+#Part Di Server
+~Aktifkan SSH Server
+sudo apt update
+sudo apt install openssh-server
+
+~Cek status SSH
+sudo systemctl status ssh (Pastikan status-nya active (running))
+~Kalau belum aktif:
+sudo systemctl start ssh
+sudo systemctl enable ssh
+
+~Cek IP Address Laptop (Server)
+ip a (biasanya wla0/eth0 tergantung koneksinya apa, Contoh: 192.168.x.x)
+
+
+#Part di Windows/PuTTY
+Login ke Laptop Teman via PuTTY
+
+~Buka PuTTY.
+
+~Host Name: IP teman (contoh 192.168.x.x).
+
+~Port: 22.
+
+~Connection type: SSH.
+
+~Klik Open.
+
+~Login pakai:
+Username Linux teman (contoh: budi).
+Password Linux teman.Buat File di Laptop Teman
+
+~Setelah masuk, kamu bisa bikin file di laptop teman:
+echo "Halo dari laptop saya" > ~/tugas.txt
+
+~Cek isi file:
+cat ~/tugas.txt
+
+
+
+#(Optional) Tes Command dari PuTTY
+uname -a          # cek kernel & OS
+whoami            # cek user yang sedang login
+uptime            # lihat berapa lama server aktif
+ip a              # lihat IP address
